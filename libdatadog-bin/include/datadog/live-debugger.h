@@ -69,18 +69,6 @@ typedef struct ddog_SnapshotEvaluationError ddog_SnapshotEvaluationError;
 
 typedef struct ddog_String ddog_String;
 
-typedef struct ddog_Slice_CChar {
-  /**
-   * Must be non-null and suitably aligned for the underlying type.
-   */
-  const char *ptr;
-  /**
-   * The number of elements (not bytes) that `.ptr` points to. Must be less
-   * than or equal to [isize::MAX].
-   */
-  uintptr_t len;
-} ddog_Slice_CChar;
-
 /**
  * Use to represent strings -- should be valid UTF-8.
  */
@@ -351,55 +339,6 @@ typedef struct ddog_CaptureValue {
   ddog_CharSlice not_captured_reason;
   ddog_CharSlice size;
 } ddog_CaptureValue;
-
-/**
- * Holds the raw parts of a Rust Vec; it should only be created from Rust,
- * never from C.
- */
-typedef struct ddog_Vec_Tag {
-  const struct ddog_Tag *ptr;
-  uintptr_t len;
-  uintptr_t capacity;
-} ddog_Vec_Tag;
-
-/**
- * Holds the raw parts of a Rust Vec; it should only be created from Rust,
- * never from C.
- */
-typedef struct ddog_Vec_U8 {
-  const uint8_t *ptr;
-  uintptr_t len;
-  uintptr_t capacity;
-} ddog_Vec_U8;
-
-/**
- * Please treat this as opaque; do not reach into it, and especially don't
- * write into it! The most relevant APIs are:
- * * `ddog_Error_message`, to get the message as a slice.
- * * `ddog_Error_drop`.
- */
-typedef struct ddog_Error {
-  /**
-   * This is a String stuffed into the vec.
-   */
-  struct ddog_Vec_U8 message;
-} ddog_Error;
-
-typedef enum ddog_Option_Error_Tag {
-  DDOG_OPTION_ERROR_SOME_ERROR,
-  DDOG_OPTION_ERROR_NONE_ERROR,
-} ddog_Option_Error_Tag;
-
-typedef struct ddog_Option_Error {
-  ddog_Option_Error_Tag tag;
-  union {
-    struct {
-      struct ddog_Error some;
-    };
-  };
-} ddog_Option_Error;
-
-typedef struct ddog_Option_Error ddog_MaybeError;
 
 typedef struct ddog_OwnedCharSlice {
   ddog_CharSlice slice;
